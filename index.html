@@ -196,12 +196,23 @@ function chart(rows){
     if(n===0) return '';
     return '<path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>'+dots;
   }
-  var last=pts[pts.length-1];
-  return '<div class="chartbox"><h3>Evolu&ccedil;&atilde;o no per&iacute;odo</h3>'+
+  function media(get){
+    var a=[]; pts.forEach(function(r){var v=get(r); if(v!=null) a.push(v);});
+    return a.length? a.reduce(function(x,y){return x+y;},0)/a.length : null;
+  }
+  var mPA=media(function(r){return (r.pa!=null&&r.pau>0)?r.pa/PA*100:null;});
+  var mRB=media(function(r){return (r.rb!=null&&r.rbu>0)?r.rb/RB*100:null;});
+  var mUT=media(function(r){return r.ut!=null?r.ut*100:null;});
+  function lg(cor,txt,v){
+    return '<span><i style="background:'+cor+'"></i>'+txt+' &middot; '+
+      (v!=null?'<b>'+Math.round(v)+'%</b>':'<span style="color:#b6bcc8">sem registro</span>')+'</span>';
+  }
+  return '<div class="chartbox"><h3>Evolu&ccedil;&atilde;o &mdash; m&eacute;dia dos &uacute;ltimos '+_period+' dias '+
+    '<span style="font-weight:400;color:#98a0ae">('+pts.length+' '+(pts.length===1?'dia':'dias')+' com registro)</span></h3>'+
     '<div class="clg">'+
-      '<span><i style="background:var(--prod)"></i>&#128230; Putaway'+(last.pa!=null&&last.pau>0?' &middot; <b>'+Math.round(last.pa/PA*100)+'%</b>':'')+'</span>'+
-      '<span><i style="background:var(--rob)"></i>&#129302; Robotics'+(last.rb!=null&&last.rbu>0?' &middot; <b>'+Math.round(last.rb/RB*100)+'%</b>':'')+'</span>'+
-      '<span><i style="background:var(--util)"></i>Utiliza&ccedil;&atilde;o'+(last.ut!=null?' &middot; <b>'+pct(last.ut)+'%</b>':'')+'</span>'+
+      lg('var(--prod)','&#128230; Putaway',mPA)+
+      lg('var(--rob)','&#129302; Robotics',mRB)+
+      lg('var(--util)','Utiliza&ccedil;&atilde;o',mUT)+
     '</div>'+
     '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Linhas de evolucao: produtividade de putaway, de robotics e utilizacao, todas em percentual da meta, com uma marcacao vertical por dia">'+
     grid+vgrid+xl+
