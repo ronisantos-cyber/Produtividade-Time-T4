@@ -404,18 +404,16 @@ function rankCalc(){
   var out={prod:[],itens:[],at:[]};
   Object.keys(MEMBERS).forEach(function(id){
     var rows=MEMBERS[id].r.filter(function(r){return r.da<_period;});
-    var eq=0,hrs=0,it=0,dp=0,ats=[];
+    var pu=0,ph=0,pd=0,it=0,dp=0,ats=[];
     rows.forEach(function(r){
       var u=0;
-      if(r.pa!=null&&r.pau>0&&r.pa>0){eq+=r.pau/PA; hrs+=r.pau/r.pa; u+=r.pau;}
-      if(r.rb!=null&&r.rbu>0&&r.rb>0){eq+=r.rbu/RB; hrs+=r.rbu/r.rb; u+=r.rbu;}
+      if(r.pa!=null&&r.pau>0&&r.pa>0){pu+=r.pau; ph+=r.pau/r.pa; pd++; u+=r.pau;}
+      if(r.rb!=null&&r.rbu>0&&r.rb>0){u+=r.rbu;}
       if(u>0){it+=u; dp++;}
       if(r.at!=null) ats.push(r.at);
     });
-    if(dp>=3&&hrs>0){
-      out.prod.push({id:id,v:eq/hrs});
-      out.itens.push({id:id,v:it});
-    }
+    if(pd>=3&&ph>0) out.prod.push({id:id,v:(pu/ph)/PA});
+    if(dp>=3) out.itens.push({id:id,v:it});
     if(ats.length>=3) out.at.push({id:id,v:ats.reduce(function(x,y){return x+y;},0)/ats.length});
   });
   ['prod','itens','at'].forEach(function(k){out[k].sort(function(a,b){return b.v-a.v;});});
@@ -441,7 +439,7 @@ function podium(list,fmt,cls,unit){
 function renderRank(){
   var r=rankCalc();
   var h='';
-  h+='<div class="rcard"><h3>&#9889; Produtividade l&iacute;quida</h3><div class="sub">Putaway + Robotics, em % da meta (PA '+num(PA)+' / RB '+num(RB)+' un/h). 100% = meta atingida.</div>'+
+  h+='<div class="rcard"><h3>&#9889; Produtividade l&iacute;quida</h3><div class="sub">Apenas Putaway (PA), em % da meta de '+num(PA)+' un/h. 100% = meta atingida.</div>'+
      podium(r.prod,function(v){return Math.round(v*100)+'%';},function(v){return v>=1?'ok':'nok';},'da meta')+'</div>';
   h+='<div class="rcard"><h3>&#128230; Itens armazenados</h3><div class="sub">Total de unidades (Putaway + Robotics) nos &uacute;ltimos '+_period+' dias.</div>'+
      podium(r.itens,function(v){return Math.round(v).toLocaleString('pt-BR');},function(){return 'nt';},'itens')+'</div>';
