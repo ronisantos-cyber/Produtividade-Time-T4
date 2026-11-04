@@ -419,7 +419,7 @@ function rankCalc(){
   ['prod','itens','at','ut'].forEach(function(k){out[k].sort(function(a,b){return b.v-a.v;});});
   return out;
 }
-function podium(list,fmt,cls,unit){
+function podium(list,fmt,cls,unit,xh,xf){
   if(!list.length) return '<div class="rempty">Sem dados suficientes no per&iacute;odo</div>';
   var top=list.slice(0,5), order=[3,1,0,2,4], ph='', vh='';
   order.forEach(function(i){
@@ -431,7 +431,8 @@ function podium(list,fmt,cls,unit){
   var rest='';
   if(list.length>5){
     rest='<details class="rlist"><summary>Ver classifica&ccedil;&atilde;o completa ('+list.length+')</summary><table>';
-    list.forEach(function(p,i){rest+='<tr><td class="pos">'+(i+1)+'&ordm;</td><td><a onclick="openId(\''+p.id+'\')">'+p.id+'</a></td><td>'+fmt(p.v)+'</td></tr>';});
+    if(xh) rest+='<tr style="color:#889;font-size:.72rem"><td></td><td>ID</td>'+xh+'<td>Taxa</td></tr>';
+    list.forEach(function(p,i){rest+='<tr><td class="pos">'+(i+1)+'&ordm;</td><td><a onclick="openId(\''+p.id+'\')">'+p.id+'</a></td>'+(xf?xf(p):'')+'<td>'+fmt(p.v)+'</td></tr>';});
     rest+='</table></details>';
   }
   return '<div class="pod">'+ph+'</div><div class="pshadow"></div><div class="pvals">'+vh+'</div>'+rest;
@@ -448,10 +449,10 @@ function renderRank(){
   h+='<div class="rcard"><h3>&#128200; Utiliza&ccedil;&atilde;o</h3><div class="sub">M&eacute;dia dos dias com registro (dura&ccedil;&atilde;o efetiva / tempo sist&ecirc;mico). Meta '+UT+'%.</div>'+
      podium(r.ut,function(v){return (v*100).toFixed(1).replace('.',',')+'%';},function(v){return Math.round(v*100)>=UT?'ok':'nok';},'utiliza&ccedil;&atilde;o m&eacute;dia')+'</div>';
   var ql=[], qd=QUAL[String(_period)]||{};
-  Object.keys(qd).forEach(function(id){ if(qd[id][2]>=1000) ql.push({id:id,v:qd[id][0]}); });
+  Object.keys(qd).forEach(function(id){ if(qd[id][2]>=1000) ql.push({id:id,v:qd[id][0],e:qd[id][1],n:qd[id][2]}); });
   ql.sort(function(a,b){return a.v-b.v;});
   h+='<div class="rcard"><h3>&#9989; Qualidade &mdash; taxa de erros</h3><div class="sub">Inbound Audit (Putaway), erros por SKUs+unidades auditadas. Menor &eacute; melhor. Meta 0,15%. M&iacute;nimo de 1.000 itens auditados. Fonte: Polaris/ICQA.</div>'+
-     podium(ql,function(v){return (v*100).toFixed(2).replace('.',',')+'%';},function(v){return Math.round(v*10000)<=15?'ok':'nok';},'taxa de erro')+'</div>';
+     podium(ql,function(v){return (v*100).toFixed(2).replace('.',',')+'%';},function(v){return Math.round(v*10000)<=15?'ok':'nok';},'taxa de erro','<td>Pe&ccedil;as</td><td>Erros</td>',function(p){return '<td>'+p.n.toLocaleString('pt-BR')+'</td><td>'+p.e.toLocaleString('pt-BR')+'</td>';})+'</div>';
   document.getElementById('rankRes').innerHTML=h;
 }
 function openId(id){
