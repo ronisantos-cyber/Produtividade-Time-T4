@@ -97,8 +97,8 @@ small{font-size:.68rem;color:#888;font-weight:400}
 .pcol{flex:1 1 0;min-width:0;max-width:128px;display:flex;flex-direction:column}
 .pcap{height:20px;border-radius:7px 7px 0 0;margin:0 -3px;position:relative;z-index:2}
 .pface{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:2px 0;cursor:pointer}
-.pface .n{font-size:1.45rem;font-weight:800;line-height:1.1}
-.pface .id{font-family:monospace;font-size:.7rem;font-weight:700;opacity:.95;margin-top:2px;letter-spacing:-.2px}
+.pface .n{font-size:1.9rem;font-weight:800;line-height:1.1}
+.pid{font-family:monospace;font-size:1.02rem;font-weight:800;color:#1a1a2e;text-align:center;margin-bottom:6px;letter-spacing:-.3px;cursor:pointer;white-space:nowrap}
 .p1 .pcap{background:#b5760a}.p1 .pface{background:#f0a00c;height:150px}
 .p2 .pcap{background:#d9d9d9}.p2 .pface{background:#bfbfbf;height:120px}
 .p3 .pcap{background:#0d7a64}.p3 .pface{background:#0fa383;height:96px}
@@ -119,7 +119,7 @@ small{font-size:.68rem;color:#888;font-weight:400}
 .rempty{color:#aab;font-size:.82rem;text-align:center;padding:24px 8px}
 @media(max-width:620px){
  .tab{padding:10px 12px;font-size:.78rem}
- .pface .n{font-size:1.15rem}.pface .id{font-size:.58rem}
+ .pface .n{font-size:1.4rem}.pid{font-size:.8rem;margin-bottom:4px;letter-spacing:-.5px}
  .p1 .pface{height:128px}.p2 .pface{height:102px}.p3 .pface{height:82px}.p4 .pface{height:66px}.p5 .pface{height:52px}
  .pv b{font-size:.82rem}
 }
@@ -427,7 +427,7 @@ function podium(list,fmt,cls,unit){
   order.forEach(function(i){
     if(i>=top.length) return;
     var p=top[i], pos=i+1;
-    ph+='<div class="pcol p'+pos+'"><div class="pcap"></div><div class="pface" onclick="openId(\''+p.id+'\')"><span class="n">0'+pos+'</span><span class="id">'+p.id+'</span></div></div>';
+    ph+='<div class="pcol p'+pos+'"><div class="pid" onclick="openId(\''+p.id+'\')">'+p.id+'</div><div class="pcap"></div><div class="pface" onclick="openId(\''+p.id+'\')"><span class="n">0'+pos+'</span></div></div>';
     vh+='<div class="pv '+cls(p.v)+'"><b>'+fmt(p.v)+'</b><small>'+unit+'</small></div>';
   });
   var rest='';
