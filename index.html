@@ -451,7 +451,7 @@ function renderRank(){
   Object.keys(qd).forEach(function(id){ if(qd[id][2]>=1000) ql.push({id:id,v:qd[id][0]}); });
   ql.sort(function(a,b){return a.v-b.v;});
   h+='<div class="rcard"><h3>&#9989; Qualidade &mdash; taxa de erros</h3><div class="sub">Inbound Audit (Putaway), erros por SKUs+unidades auditadas. Menor &eacute; melhor. Meta 0,15%. M&iacute;nimo de 1.000 itens auditados. Fonte: Polaris/ICQA.</div>'+
-     podium(ql,function(v){return (v*100).toFixed(2).replace('.',',')+'%';},function(v){return v<=0.0015?'ok':'nok';},'taxa de erro')+'</div>';
+     podium(ql,function(v){return (v*100).toFixed(2).replace('.',',')+'%';},function(v){return Math.round(v*10000)<=15?'ok':'nok';},'taxa de erro')+'</div>';
   document.getElementById('rankRes').innerHTML=h;
 }
 function openId(id){
