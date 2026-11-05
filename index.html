@@ -187,7 +187,7 @@ function pct(v){return v==null?null:Math.round(v*100);}
 function qCell(e,n,avg){
   if(!(n>0)) return '<td>'+(avg?'-':'<span class="chip cna">-</span>')+'</td>';
   var v=e/n, ok=Math.round(v*10000)<=15;
-  return '<td class="'+(ok?'ok':'nok')+'">'+(v*100).toFixed(2).replace('.',',')+'%<br><small style="font-weight:400;color:#889">'+e+' / '+n.toLocaleString('pt-BR')+'</small></td>';
+  return '<td class="'+(ok?'ok':'nok')+'">'+(v*100).toFixed(2).replace('.',',')+'%<br><small style="font-weight:400;color:#889">'+e+(e===1?' erro':' erros')+'</small></td>';
 }
 function prodCell(pa,pau,rb,rbu){
   if(pa==null&&rb==null) return '<td class="s"><span class="chip cna">-</span></td>';
